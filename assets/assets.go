@@ -3,6 +3,7 @@ package assets
 import (
 	"embed"
 	"image"
+	_ "image/png"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -10,7 +11,7 @@ import (
 //go:embed *
 var assests embed.FS
 
-var PlayerSprite = mustLoadImage("assets/player.png")
+var PlayerSprite = mustLoadImage("player.png")
 
 func mustLoadImage(name string) *ebiten.Image {
 	f, err := assests.Open(name)
