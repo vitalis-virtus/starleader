@@ -22,7 +22,6 @@ func New() *Game {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.player.Draw(screen)
-
 }
 
 func (g *Game) Update() error {
@@ -31,6 +30,7 @@ func (g *Game) Update() error {
 	return nil
 }
 
-func (g *Game) Layout(outsideWidth, insideHeight int) (screenWidth, screenHight int) {
+// Layout method returns the size of the game window
+func (g *Game) Layout(outsideWidth, insideHeight int) (int, int) {
 	return screenWidth, screenHeight
 }
