@@ -1,30 +1,43 @@
 package game
 
 import (
+	"fmt"
+	"image/color"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/vitalis-virtus/starleader/assets"
 )
 
 const (
 	screenWidth  = 800
 	screenHeight = 600
+
+	meteorSpawnTime     = 1 * time.Second
+	baseMeteorVelocity  = 0.25
+	meteorSpeedUpAmount = 0.1
+	meteorSpeedUpTime   = 5 * time.Second
 )
 
 type Game struct {
-	player  *Player
-	meteors []*Meteor
-	bullets []*Bullet
+	player           *Player
+	bullets          []*Bullet
+	meteors          []*Meteor
+	meteorSpawnTimer *Timer
 
 	score int
 
-	meteorSpawnTimer *Timer
+	baseMeteorVelocity float64
+	velocityTimer      *Timer
 }
 
 func New() *Game {
 	g := Game{
-		meteorSpawnTimer: NewTimer(time.Second),
-		score:            0,
+		score:              0,
+		meteorSpawnTimer:   NewTimer(meteorSpawnTime),
+		baseMeteorVelocity: baseMeteorVelocity,
+		velocityTimer:      NewTimer(meteorSpeedUpTime),
 	}
 
 	p := NewPlayer(&g)
@@ -44,16 +57,24 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, b := range g.bullets {
 		b.Draw(screen)
 	}
+
+	text.Draw(screen, fmt.Sprintf("%06d", g.score), assets.ScoreFont, screenWidth/2-100, 50, color.White)
 }
 
 func (g *Game) Update() error {
+	g.velocityTimer.Update()
+	if g.velocityTimer.IsReady() {
+		g.velocityTimer.Reset()
+		g.baseMeteorVelocity += meteorSpeedUpAmount
+	}
+
 	g.player.Update()
 
 	g.meteorSpawnTimer.Update()
 	if g.meteorSpawnTimer.IsReady() {
 		g.meteorSpawnTimer.Reset()
 
-		m := NewMeteor()
+		m := NewMeteor(g.baseMeteorVelocity)
 		g.meteors = append(g.meteors, m)
 	}
 

@@ -9,6 +9,11 @@ import (
 	"github.com/vitalis-virtus/starleader/assets"
 )
 
+const (
+	rotationSpeedMin = -0.2
+	rotationSpeedMax = 0.2
+)
+
 type Meteor struct {
 	rotation      float64
 	rotationSpeed float64
@@ -19,7 +24,7 @@ type Meteor struct {
 	sprite *ebiten.Image
 }
 
-func NewMeteor() *Meteor {
+func NewMeteor(baseVelocity float64) *Meteor {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	target := Vector{
@@ -37,7 +42,7 @@ func NewMeteor() *Meteor {
 	}
 
 	// Randomized velocity
-	velocity := 0.25 + rand.Float64()*1.5
+	velocity := baseVelocity + rand.Float64()*1.5
 
 	direction := Vector{
 		X: target.X - position.X,
@@ -51,7 +56,7 @@ func NewMeteor() *Meteor {
 		Y: normalizedDirection.Y * velocity,
 	}
 
-	rotationSpeed := -0.02 + rand.Float64()*0.04
+	rotationSpeed := rotationSpeedMin + rand.Float64()*(rotationSpeedMax-rotationSpeedMin)
 
 	sprite := assets.MeteorSprites[rand.Intn(len(assets.MeteorSprites))]
 
