@@ -11,6 +11,8 @@ import (
 const (
 	playerRotationPerSecond = math.Pi
 	playerShootCooldown     = time.Millisecond * 500
+
+	bulletSpawnOffset = 50.0
 )
 
 type Player struct {
@@ -55,6 +57,24 @@ func (p *Player) Update() {
 
 	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
 		p.rotation += speed
+	}
+
+	p.shootCooldown.Update()
+	if p.shootCooldown.IsReady() && ebiten.IsKeyPressed(ebiten.KeySpace) {
+		p.shootCooldown.Reset()
+
+		bounds := p.sprite.Bounds()
+		halfX := float64(bounds.Dx()) / 2
+		halfY := float64(bounds.Dy()) / 2
+
+		bulletSpawnPos := Vector{
+			X: p.position.X + halfX + math.Sin(p.rotation)*bulletSpawnOffset,
+			Y: p.position.Y + halfY + math.Cos(p.rotation)*-bulletSpawnOffset,
+		}
+
+		bullet := NewBullet(bulletSpawnPos, p.rotation)
+
+		p.game.bullets = append(p.game.bullets, bullet)
 	}
 
 }

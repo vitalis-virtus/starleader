@@ -37,6 +37,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, m := range g.meteors {
 		m.Draw(screen)
 	}
+
+	for _, b := range g.bullets {
+		b.Draw(screen)
+	}
 }
 
 func (g *Game) Update() error {
@@ -52,6 +56,10 @@ func (g *Game) Update() error {
 
 	for _, m := range g.meteors {
 		m.Update()
+	}
+
+	for _, b := range g.bullets {
+		b.Update()
 	}
 
 	return nil
