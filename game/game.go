@@ -14,26 +14,26 @@ const (
 type Game struct {
 	player  *Player
 	meteors []*Meteor
-	bullet  *Bullet
+	bullets []*Bullet
 
 	meteorSpawnTimer *Timer
 }
 
 func New() *Game {
 	g := Game{
-		player:           NewPlayer(),
 		meteorSpawnTimer: NewTimer(time.Second),
-		bullet: NewBullet(Vector{
-			screenWidth / 2, screenHeight / 2,
-		}, 45.0),
 	}
+
+	p := NewPlayer(&g)
+
+	g.player = p
+
 	return &g
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.player.Draw(screen)
 
-	g.bullet.Draw(screen)
 	for _, m := range g.meteors {
 		m.Draw(screen)
 	}
@@ -41,7 +41,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func (g *Game) Update() error {
 	g.player.Update()
-	g.bullet.Update()
 
 	g.meteorSpawnTimer.Update()
 	if g.meteorSpawnTimer.IsReady() {

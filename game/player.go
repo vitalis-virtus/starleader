@@ -2,18 +2,28 @@ package game
 
 import (
 	"math"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/vitalis-virtus/starleader/assets"
 )
 
+const (
+	playerRotationPerSecond = math.Pi
+	playerShootCooldown     = time.Millisecond * 500
+)
+
 type Player struct {
+	game *Game
+
 	position Vector
 	rotation float64
 	sprite   *ebiten.Image
+
+	shootCooldown *Timer
 }
 
-func NewPlayer() *Player {
+func NewPlayer(game *Game) *Player {
 	sprite := assets.PlayerSprite
 
 	bounds := sprite.Bounds()
@@ -25,15 +35,19 @@ func NewPlayer() *Player {
 		Y: screenHeight/2 - halfH,
 	}
 
+	shootTimer := NewTimer(playerShootCooldown)
+
 	return &Player{
-		position: position,
-		rotation: 0,
-		sprite:   sprite,
+		game:          game,
+		position:      position,
+		rotation:      0,
+		sprite:        sprite,
+		shootCooldown: shootTimer,
 	}
 }
 
 func (p *Player) Update() {
-	speed := math.Pi / float64(ebiten.TPS())
+	speed := playerRotationPerSecond / float64(ebiten.TPS())
 
 	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
 		p.rotation -= speed
