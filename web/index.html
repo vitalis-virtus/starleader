@@ -7,9 +7,25 @@
   iframe {
     margin: 0 auto;
     display: block;
-    border: 0;
+    border: #fff solid 1px;
+    border-radius: 10%;
+  }
+
+  .game {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>
 <body>
-  <iframe src="main.html" width="800" height="600" allow="autoplay"></iframe>
+  <div class="game">
+    <iframe
+      src="main.html"
+      width="800"
+      height="640"
+      allow="autoplay"
+      scrolling="no"
+    ></iframe>
+  </div>
 </body>
