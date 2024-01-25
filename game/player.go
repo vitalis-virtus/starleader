@@ -74,7 +74,7 @@ func (p *Player) Update() {
 
 		bullet := NewBullet(bulletSpawnPos, p.rotation)
 
-		p.game.bullets = append(p.game.bullets, bullet)
+		p.game.AddBullet(bullet)
 	}
 
 }

@@ -69,3 +69,7 @@ func (g *Game) Update() error {
 func (g *Game) Layout(outsideWidth, insideHeight int) (int, int) {
 	return screenWidth, screenHeight
 }
+
+func (g *Game) AddBullet(bullet *Bullet) {
+	g.bullets = append(g.bullets, bullet)
+}
