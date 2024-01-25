@@ -16,12 +16,15 @@ type Game struct {
 	meteors []*Meteor
 	bullets []*Bullet
 
+	score int
+
 	meteorSpawnTimer *Timer
 }
 
 func New() *Game {
 	g := Game{
 		meteorSpawnTimer: NewTimer(time.Second),
+		score:            0,
 	}
 
 	p := NewPlayer(&g)
@@ -62,6 +65,24 @@ func (g *Game) Update() error {
 		b.Update()
 	}
 
+	// Check for meteor/bullet collisions
+	for i, m := range g.meteors {
+		for j, b := range g.bullets {
+			if m.Collider().Intersects(b.Collider()) {
+				g.meteors = append(g.meteors[:i], g.meteors[i+1:]...)
+				g.bullets = append(g.bullets[:j], g.bullets[j+1:]...)
+				g.score++
+			}
+		}
+	}
+
+	// Check for meteor/player collisions
+	for _, m := range g.meteors {
+		if m.Collider().Intersects(g.player.Collider()) {
+			g.Reset()
+		}
+	}
+
 	return nil
 }
 
@@ -72,4 +93,11 @@ func (g *Game) Layout(outsideWidth, insideHeight int) (int, int) {
 
 func (g *Game) AddBullet(bullet *Bullet) {
 	g.bullets = append(g.bullets, bullet)
+}
+
+func (g *Game) Reset() {
+	g.player = NewPlayer(g)
+	g.score = 0
+	g.meteors = nil
+	g.bullets = nil
 }
