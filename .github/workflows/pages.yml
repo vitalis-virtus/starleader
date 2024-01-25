@@ -30,3 +30,8 @@ jobs:
           path: web/
       - id: deployment
         uses: actions/deploy-pages@v1
+      - name: Debug Info
+        run: |
+          ls -R web
+          echo "GitHub Pages URL: ${{ steps.deployment.outputs.page_url }}"
+        if: always()
