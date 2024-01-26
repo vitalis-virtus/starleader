@@ -14,7 +14,7 @@ import (
 //go:embed *
 var assets embed.FS
 
-var PlayerSprite = mustLoadImage("rocket.png")
+var PlayerSprite = mustLoadImage("player.png")
 var MeteorSprites = mustLoadImages("meteors/*.png")
 var LaserSprite = mustLoadImage("laser.png")
 var ScoreFont = mustLoadFont("font.ttf")
